@@ -5,7 +5,7 @@ estrutura do rack — sem modelar nada em outro programa, sem exportar arquivo 3
 posição de cada palete (rua, rack e nível, ou a coordenada de cada rack) e o visual desenha o
 galpão sozinho.
 
-![Visão geral do Rackview 3D](docs/rackview-3d-infografico-v3.png)
+![Visão geral do Rackview 3D](rackview-3d-infografico-v3.png)
 
 ## O que dá pra fazer
 
@@ -29,7 +29,7 @@ Isso já cobre a maioria dos casos. Para galpões com formato irregular (corredo
 blocos fora do padrão), existe o **modo Planta**: em vez de rua/rack/nível, cada rack recebe uma
 coordenada X e Y, como neste esquema:
 
-![Como montar as coordenadas do modo Planta](docs/rackview-3d-coordenadas.png)
+![Como montar as coordenadas do modo Planta](rackview-3d-coordenadas.png)
 
 A ideia em três passos:
 
@@ -41,4 +41,4 @@ A ideia em três passos:
 ## Guia completo
 
 O passo a passo com todas as opções (cores, zonas, galpões, filtros, atalhos de navegação) está em
-[`docs/guia-de-uso.md`](docs/guia-de-uso.md).
+[`docs/guia-de-uso.md`](guia-de-uso.md).
