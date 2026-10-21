@@ -16,6 +16,28 @@ galpão sozinho.
 - Navegar em 3D: girar, aproximar, afastar, clicar para selecionar.
 - Funciona com galpões retos (rua/rack/nível) ou com formatos irregulares (coordenadas).
 
+## Novidades
+
+![Novidades do Rackview 3D](rack3d/docs/linkedin-novidades.png)
+
+- **Highlight**: ao filtrar um item com poucos paletes, um feixe de luz sobe de cada rack que o tem,
+  com uma bandeira mostrando quantos paletes estão ali. O botão **Highlight** liga e desliga o
+  realce. Os feixes só aparecem quando os paletes visíveis são até 35% das posições e ficam em até
+  120 racks; fora disso o realce não acende, para não poluir a tela.
+- **Drive**: dirige uma empilhadeira dentro do galpão. A tecla **V** troca entre a cabine e a
+  terceira pessoa; W/S acelera e dá ré, A/D vira, R/F sobe e desce os garfos, Shift acelera mais,
+  Espaço freia e Esc sai.
+- **Ocupação**: com os campos **Occupancy** (ocupação) e **Capacity** (capacidade), o visual calcula
+  o percentual por galpão. Ele aparece no rótulo de cada galpão (por exemplo, `G4 · 84.42%`) e na
+  legenda, junto do total geral.
+- **Labels**: o menu **Labels** escolhe o que aparece escrito na cena: ruas, zonas e galpões.
+- **Legenda minimizável**: o botão **−** no canto da legenda a recolhe para **Legend +**; um clique
+  reabre. A escolha vale enquanto o visual está aberto.
+- **Zoom por slider**: um slider substitui os botões **+** e **−**. A ponta esquerda é o
+  enquadramento do **Reframe** (cena inteira) e a direita chega perto do palete. O scroll do mouse
+  continua funcionando e o slider acompanha.
+- **Busca removida**: a caixa de busca da barra foi retirada.
+
 ## Como usar
 
 1. **Monte uma tabela com uma linha por posição** (rua + rack + nível), incluindo as posições
