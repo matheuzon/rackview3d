@@ -18,7 +18,7 @@ galpão sozinho.
 
 ## Novidades
 
-![Novidades do Rackview 3D](rack3d/docs/linkedin-novidades.png)
+![Novidades do Rackview 3D](linkedin-novidades.png)
 
 - **Highlight**: ao filtrar um item com poucos paletes, um feixe de luz sobe de cada rack que o tem,
   com uma bandeira mostrando quantos paletes estão ali. O botão **Highlight** liga e desliga o
