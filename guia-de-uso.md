@@ -1,335 +1,410 @@
-# Rackview 3D — Guia de uso
+# Rackview 3D — User guide
 
-Visual 3D de racks para o Power BI. Cada posição de estoque vira um palete colorido dentro da
-estrutura do rack, e você navega com o mouse. Este guia ensina a usar; não é preciso programar.
+3D rack visual for Power BI. Each storage position becomes a colored pallet inside the rack structure,
+and you navigate it with the mouse. This guide shows how to use it; no coding is needed.
 
-**Sumário**
+**Contents**
 
-1. [Primeiros passos](#1-primeiros-passos)
-2. [Posicionar: grade automática ou planta](#2-posicionar-grade-automática-ou-planta)
-3. [Galpões: paredes, piso e altura](#3-galpões-paredes-piso-e-altura)
-4. [Zonas](#4-zonas)
-5. [Cores e legenda](#5-cores-e-legenda)
-6. [Filtrar sem perder a estrutura (campo Exibir)](#6-filtrar-sem-perder-a-estrutura-campo-exibir)
-7. [Navegar no 3D](#7-navegar-no-3d)
-8. [Painel de formatação, resumo](#8-painel-de-formatação-resumo)
-9. [Limites e problemas comuns](#9-limites-e-problemas-comuns)
+1. [Getting started](#1-getting-started)
+2. [Positioning: automatic grid or floor plan](#2-positioning-automatic-grid-or-floor-plan)
+3. [Warehouses: walls, floor and height](#3-warehouses-walls-floor-and-height)
+4. [Zones](#4-zones)
+5. [Colors and legend](#5-colors-and-legend)
+6. [Filtering without losing the structure (Show field)](#6-filtering-without-losing-the-structure-show-field)
+7. [Navigating in 3D](#7-navigating-in-3d)
+8. [Format pane summary](#8-format-pane-summary)
+9. [Limits and common problems](#9-limits-and-common-problems)
 
 ---
 
-## 1. Primeiros passos
+## 1. Getting started
 
-**Uma linha por posição.** Cada combinação Rua + Rack + Nível deve aparecer **uma vez**. Se a base tem
-várias linhas por posição (vários materiais no mesmo palete), agregue antes no Power Query.
+**One row per position.** Each Aisle + Rack + Level combination must appear **once**. If your data has
+several rows per position (several materials on the same pallet), aggregate them first in Power Query.
 
-| Rua | Rack | Nível | Quantidade | Contado |
+| Aisle | Rack | Level | Quantity | Counted |
 |---|---|---|---|---|
-| 1 | 01 | A | 36 | Sim |
-| 1 | 01 | B | 0 | Não |
-| 1 | 02 | A | 51 | Sim |
+| 1 | 01 | A | 36 | Yes |
+| 1 | 01 | B | 0 | No |
+| 1 | 02 | A | 51 | Yes |
 
-**Traga todas as posições do cadastro**, inclusive as vazias. O visual só desenha o que chega: se você
-filtrar a base, a estrutura encolhe. Para filtrar sem isso, use o campo **Exibir** (seção 6).
+**Bring every position from your master data**, including the empty ones. The visual only draws what it
+receives: if you filter the data, the structure shrinks. To filter without that, use the **Show** field
+(section 6).
 
-**Arraste os campos para o visual:**
+**Drag the fields into the visual:**
 
-| Campo | Obrigatório | Para que serve |
+| Field | Required | What it is for |
 |---|---|---|
-| **Rua**, **Rack**, **Nível** | Sim | Onde cada palete fica |
-| **Colorir por** | Não | Campo que define a cor (quantidade, contado, material…) |
-| **Cor (hex)** | Não | Coluna com cores prontas `#RRGGBB`; sobrepõe a cor por valor |
-| **Exibir** | Não | Medida ou coluna 0/1 que esconde paletes (seção 6) |
-| **Coord X**, **Coord Y** | Não | Posição de cada rack na planta (seção 2) |
-| **Galpão** | Não | Paredes e piso por galpão (seção 3) |
-| **Altura do galpão** | Não | Altura dos racks de cada galpão (seção 3) |
-| **Tooltip / detalhes** | Não | Campos que aparecem ao passar o mouse |
+| **Aisle**, **Rack**, **Level** | Yes | Where each pallet sits |
+| **Color by** | No | Field that defines the color (quantity, counted, material…) |
+| **Color (hex)** | No | Column with ready-made `#RRGGBB` colors; overrides color by value |
+| **Show** | No | Measure or 0/1 column that hides pallets (section 6) |
+| **X coord**, **Y coord** | No | Position of each rack on the floor plan (section 2) |
+| **Warehouse** | No | Walls and floor per warehouse (section 3) |
+| **Warehouse height** | No | Rack height of each warehouse (section 3) |
+| **Occupancy**, **Capacity** | No | Occupied and total capacity of each position, in the same unit (section 3) |
+| **Tooltip / details** | No | Fields shown when you hover a pallet |
 
-Use um só campo em cada slot, exceto em **Tooltip / detalhes**. Rua, Rack e Nível podem ser texto ou
-número; linhas com algum deles vazio são ignoradas e contadas no aviso da legenda.
+Use a single field in each slot, except **Tooltip / details**. Aisle, Rack and Level can be text or
+numbers; rows where any of them is empty are ignored and counted in the legend warning.
 
 ---
 
-## 2. Posicionar: grade automática ou planta
+## 2. Positioning: automatic grid or floor plan
 
-O visual tem dois modos. O modo é escolhido pelos campos: **sem** Coord X/Y é grade automática; **com**
-Coord X e Coord Y é planta.
+The visual has two modes, chosen by the fields: **without** X/Y coord it is the automatic grid; **with**
+X coord and Y coord it is the floor plan.
 
-### Grade automática (Rua, Rack e Nível)
+### Automatic grid (Aisle, Rack and Level)
 
-O visual organiza tudo sozinho: as ruas ficam uma atrás da outra, o rack define a posição ao longo da
-rua e o nível define a altura.
+The visual lays everything out by itself: aisles sit one behind the other, the rack sets the position
+along the aisle and the level sets the height.
 
-Opções em **Layout**:
+Options under **Layout**:
 
-| Opção | O que permite |
+| Option | What it does |
 |---|---|
-| Agrupar ruas em pares | Encosta as ruas de duas em duas, com corredor entre os pares |
-| Pareamento das ruas | **Pela posição na lista** (1ª com 2ª…) ou **Pelo número da rua** (1 com 2, 3 com 4…) |
-| Primeira rua é a 2ª do par | Corrige o par quando a primeira rua exibida é a segunda de um par físico |
-| Pares começam em rua par | No pareamento por número, forma 2-3, 4-5… |
-| Rótulos de rua | Mostra "Rua N" na ponta de cada rua |
-| Ordem do nível | **Natural** (números antes de letras) ou **Personalizada** (você digita `A,B,C,1,2`) |
-| Inverter níveis / racks / ruas | Troca a ordem de cada eixo (racks invertidos alinham as ruas no lado oposto) |
+| Group aisles in pairs | Places aisles back to back two by two, with a corridor between pairs |
+| Aisle pairing | **By position in the list** (1st with 2nd…) or **By aisle number** (1 with 2, 3 with 4…) |
+| First aisle is the 2nd of a pair | Fixes the pairing when the first displayed aisle is the second of a physical pair |
+| Pairs start at an even aisle | With pairing by number, forms 2-3, 4-5… |
+| Aisle labels | Shows "Aisle N" at the end of each aisle |
+| Level order | **Natural** (numbers before letters) or **Custom** (you type `A,B,C,1,2`) |
+| Invert levels / racks / aisles | Reverses each axis (inverted racks align the aisles on the opposite side) |
 
-Em **Geometria**: **Altura do nível** (0,8 a 4) e **Largura do corredor** (1 a 12).
+Under **Geometry**: **Level height** (0.8 to 4) and **Corridor width** (1 to 12).
 
-Cada rua tem o tamanho dos seus dados: uma rua com 12 racks e 3 níveis fica menor que uma com 45 racks e
-8 níveis.
+Each aisle has the size of its own data: an aisle with 12 racks and 3 levels is smaller than one with 45
+racks and 8 levels.
 
-### Planta (Coord X e Coord Y)
+### Floor plan (X coord and Y coord)
 
-Use quando os galpões têm formatos, orientações ou posições diferentes. Cada rack recebe uma coordenada
-em um plano único, e o visual desenha exatamente nelas.
+Use it when warehouses have different shapes, orientations or positions. Each rack gets a coordinate on a
+single plane, and the visual draws exactly there.
 
-**Como preencher**
+**How to fill it in**
 
-- Coloque **Coord X** e **Coord Y** (coluna ou medida) na tabela de posições. O valor é o do **rack** e
-  se repete em cada nível dele.
-- A unidade é **1 rack**: racks vizinhos têm coordenadas vizinhas (X=10, X=11…).
-- **Corredores são vãos**: deixe uma ou mais coordenadas sem rack para abrir um corredor.
-- **A rua pode ser horizontal ou vertical**: o visual percebe pela variação das coordenadas.
-- Y aumenta para baixo na vista de cima. Se o desenho ficou espelhado, multiplique X (ou Y) por -1 nos
-  dados.
-- **Rua com duas fileiras** (o corredor no meio, numeração em U ou zigue-zague) funciona: basta dar a
-  coordenada de cada rack.
+- Put **X coord** and **Y coord** (column or measure) in the positions table. The value belongs to the
+  **rack** and repeats on every level of it.
+- The unit is **1 rack**: neighboring racks have neighboring coordinates (X=10, X=11…).
+- **Corridors are gaps**: leave one or more coordinates without a rack to open a corridor.
+- **An aisle can be horizontal or vertical**: the visual detects it from how the coordinates vary.
+- Y grows downward in the top view. If the drawing came out mirrored, multiply X (or Y) by -1 in the
+  data.
+- **Aisles with two rows** (corridor in the middle, U or zigzag numbering) work: just give the coordinate
+  of each rack.
 
-**Opções que valem na planta**
+**Options that apply to the floor plan**
 
-| Opção | O que permite |
+| Option | What it does |
 |---|---|
-| Geometria → Tamanho da célula | Tamanho de cada rack no desenho (0,8 a 3) |
-| Geometria → Altura do nível | Altura de cada nível (0,8 a 4) |
-| Layout → Rótulos de rua | Liga e desliga os rótulos |
-| Layout → Rótulo da rua | **Por corredor**: um rótulo por rua, no meio das fileiras. **Por fileira**: um em cada fileira |
-| Layout → Ordem do nível / Inverter níveis | Iguais à grade automática |
+| Geometry → Rack cell size | Size of each rack in the drawing (0.8 to 3) |
+| Geometry → Level height | Height of each level (0.8 to 4) |
+| Layout → Aisle labels | Turns the labels on and off |
+| Layout → Aisle label | **Per lane**: one label per aisle, between the rows. **Per rack row**: one on each row |
+| Layout → Level order / Invert levels | Same as the automatic grid |
 
-Na planta **não valem** o pareamento, a largura do corredor nem inverter racks/ruas: as coordenadas já
-definem isso.
+On the floor plan, pairing, corridor width and inverting racks/aisles **do not apply**: the coordinates
+already define them.
 
-**Avisos na legenda**
+**Legend warnings**
 
-- *Rack sem coordenada:* não é desenhado.
-- *Coordenadas divergentes:* o mesmo rack com mais de uma coordenada; vale a da primeira linha.
-- *Sobreposição:* dois racks na mesma célula.
+- *Rack without coordinates:* not drawn.
+- *Conflicting coordinates:* the same rack with more than one coordinate; the first row wins.
+- *Overlap:* two racks in the same cell.
 
-Uma rua com **um rack só** é desenhada na horizontal, porque não há como saber a direção.
+An aisle with **a single rack** is drawn horizontally, because there is no way to know its direction.
 
 ---
 
-## 3. Galpões: paredes, piso e altura
+## 3. Warehouses: walls, floor and height
 
-### Paredes e piso por galpão
+### Walls and floor per warehouse
 
-Coloque o campo **Galpão** (com Coord X e Coord Y). O visual desenha uma **parede baixa** ao redor de
-cada galpão e um **piso colorido** por galpão. Onde dois galpões se encostam, dividem a mesma parede.
+Add the **Warehouse** field (with X coord and Y coord). The visual draws a **low wall** around each
+warehouse and a **colored floor** per warehouse. Where two warehouses touch, they share the wall.
 
-Em **Galpões**:
+Under **Warehouses**:
 
-| Opção | O que permite |
+| Option | What it does |
 |---|---|
-| Mostrar paredes / Cor da parede | Liga e desliga as paredes e escolhe a cor |
-| Altura da parede | Altura das paredes (0,2 a 3) |
-| Margem da parede | Folga entre os racks e a parede, em células (0 a 6). Aumente até dois galpões vizinhos dividirem a parede |
-| Piso colorido por galpão | Liga e desliga o piso |
+| Show walls / Wall color | Turns the walls on and off and picks the color |
+| Wall height | Height of the walls (0.2 to 3) |
+| Wall margin | Gap between racks and wall, in cells (0 to 6). Increase it until two neighboring warehouses share a wall |
+| Floor colored by warehouse | Turns the floor on and off |
+| Show warehouse labels | Turns the warehouse name label on and off |
 
-O contorno é sempre um **retângulo** ao redor dos racks do galpão.
+The outline is always a **rectangle** around the warehouse racks.
 
-### Altura do galpão
+### Warehouse label and occupancy
 
-Ponha uma coluna com a altura de cada galpão (por exemplo 7, 9, 9) no campo **Altura do galpão**. O valor
-pode repetir em todas as linhas do galpão.
+With the **Warehouse** field (floor plan), a label such as **Warehouse G1** floats above the center of each
+warehouse, over the racks.
 
-- Todos os racks do galpão passam a ter **essa altura**, e a altura de cada nível se ajusta ao número de
-  níveis. Assim, o galpão de 9 níveis fica com níveis baixos e o de 4 níveis com níveis altos, todos com
-  a mesma altura total.
-- Vale a unidade da cena (parecida com metros).
-- Se a altura for pequena demais para os níveis, o visual usa o mínimo possível e avisa na legenda.
-- Sem o campo, vale a **Altura do nível** do cartão Geometria.
-- Sem o campo Galpão, o valor vale para todos os racks.
+To show how full each warehouse is, add two fields, both **per position** and in the **same unit** (kg,
+pallets, anything):
+
+- **Capacity:** how much the position holds. It comes from your coordinates table.
+- **Occupancy:** how much it holds now. Positions with no value count as zero.
+
+The label then reads **Warehouse G1 · 72.43%**, and the legend gets an **Occupancy** line:
+`72.43% (1,440 / 2,000)`; with more than one warehouse, one line per warehouse.
+
+- Occupancy % = sum of Occupancy ÷ sum of Capacity, over **all** positions (including empty ones and
+  those hidden by the **Show** field). Racks without a coordinate on the floor plan are left out.
+- It only appears when the **Occupancy** field has at least one value. Without **Capacity**, the legend
+  shows only the occupied total and the label shows only the name.
+- If **Color by** is the warehouse (each color value is exactly one warehouse), each legend row also
+  gets its occupancy: `G1 (120 · 15.0% · 72.43% occ.)`.
+- Keep one row per position: duplicated rows would be ignored, only the first one counts.
+
+### Warehouse height
+
+Put a column with each warehouse height (for example 7, 9, 9) in the **Warehouse height** field. The
+value can repeat on every row of the warehouse.
+
+- All racks of the warehouse get **that height**, and the height of each level adjusts to the number of
+  levels. So a 9-level warehouse gets short levels and a 4-level one gets tall levels, all with the same
+  total height.
+- The unit is the scene unit (close to meters).
+- If the height is too small for the levels, the visual uses the minimum possible and warns in the legend.
+- Without the field, the **Level height** from the Geometry card applies.
+- Without the Warehouse field, the value applies to all racks.
 
 ---
 
-## 4. Zonas
+## 4. Zones
 
-Marca áreas que não são racks, como doca, devolução ou escritório. Só na **planta**.
+Marks areas that are not racks, such as a dock, returns or an office. **Floor plan** only.
 
-1. Em **Zonas (máximo 20)**, ligue **Ativar zonas**.
-2. Em **Número de zonas**, escolha quantas quer (até 20).
-3. Preencha cada **Zona N**:
-   - **Título:** aparece flutuando sobre a zona.
-   - **X1, Y1** e **X2, Y2:** dois cantos opostos, nas mesmas coordenadas da planta. O retângulo cobre as
-     células inteiras entre eles.
-   - **Cor:** cor do piso e do contorno.
-   - **Altura:** 0 desenha só o piso; acima de 0 vira um volume baixo, como uma doca elevada.
-4. **Mostrar títulos das zonas** liga e desliga os títulos.
+1. Under **Zones (max 20)**, turn on **Enable zones**.
+2. Under **Number of zones**, choose how many you want (up to 20).
+3. Fill in each **Zone N**:
+   - **Title:** floats above the zone.
+   - **X1, Y1** and **X2, Y2:** two opposite corners, in the same coordinates as the floor plan. The
+     rectangle covers the whole cells between them.
+   - **Color:** color of the floor and outline.
+   - **Height:** 0 draws only the floor; above 0 it becomes a low volume, like a raised dock.
+4. **Show zone titles** turns the titles on and off.
 
-Se diminuir o número de zonas, os dados das escondidas ficam guardados. Zona sem título e com tudo zerado
-é ignorada.
+If you reduce the number of zones, the data of the hidden ones is kept. A zone with no title and all
+zeros is ignored.
 
 ---
 
-## 5. Cores e legenda
+## 5. Colors and legend
 
-Coloque um campo em **Colorir por** e abra **Formato → Cores**. O painel se adapta ao tipo do campo.
+Put a field in **Color by** and open **Format → Colors**. The pane adapts to the field type.
 
-| Modo | Quando usar | O que permite |
+| Mode | When to use | What it does |
 |---|---|---|
-| **Automático** (padrão) | Sempre | Escolhe pelo tipo do campo: número vira gradiente; texto, sim/não e data viram categórico |
-| **Categórico** | Poucos valores diferentes | Uma cor para cada valor. As cores ficam guardadas por valor. São até 30 valores; os demais ficam em cinza ("Outros") |
-| **Gradiente** | Campo numérico | Cor mínima, máxima e, se quiser, média. Mínimo e máximo automáticos ou digitados. O zero conta como "sem valor" |
-| **Faixas** | Campo numérico | De 2 a 6 faixas, cada uma com limite e cor. O limite entra na faixa; a última faixa é aberta |
+| **Automatic** (default) | Always | Picks by field type: numbers become a gradient; text, yes/no and dates become categorical |
+| **Categorical** | Few distinct values | One color per value. Colors are stored per value. Up to 30 values; the rest turn gray ("Others") |
+| **Gradient** | Numeric field | Minimum, maximum and, optionally, middle color. Automatic or typed minimum and maximum. Zero counts as "no value" |
+| **Ranges** | Numeric field | 2 to 6 ranges, each with a limit and a color. The limit belongs to its range; the last range is open |
 
-Outras opções:
+Other options:
 
-- **Sem valor:** cor de quem tem o campo vazio.
-- **Palete padrão:** cor de todos quando não há "Colorir por".
-- **Cor (hex):** se você calcula a cor no Power Query ou numa medida, o resultado `#RRGGBB` sobrepõe
-  qualquer regra.
-- **Ocultar valores:** lista de valores cujos paletes somem (a estrutura fica). Separe por vírgula:
-  `Não, 0, (Sem valor)`. Para números, use `>30`, `<=2`. Com vírgula decimal, separe por ponto e vírgula.
+- **No value:** color for rows where the field is empty.
+- **Default pallet:** color of everything when there is no "Color by".
+- **Color (hex):** if you compute the color in Power Query or in a measure, the `#RRGGBB` result
+  overrides any rule.
+- **Hide values:** list of values whose pallets disappear (the structure stays). Separate with commas:
+  `No, 0, (No value)`. For numbers, use `>30`, `<=2`. With a decimal comma, separate with semicolons.
 
-**Legenda:** mostra cada valor ou faixa com a cor e a contagem (e o %, se quiser), considerando só o que
-está visível. Em **Legenda** você escolhe mostrar, posição, fonte, contagem e %. Os avisos também
-aparecem nela.
+**Legend:** shows each value or range with its color and count (and %, if you want), considering only
+what is visible. Under **Legend** you choose show, position, font, count and %. Warnings also appear
+there. With the **Occupancy** field, it also shows the occupancy (section 3).
 
 ---
 
-## 6. Filtrar sem perder a estrutura (campo Exibir)
+## 6. Filtering without losing the structure (Show field)
 
-Um slicer comum filtra a base e a estrutura dos racks encolhe. Para filtrar e **manter os racks
-desenhados**, escondendo só os paletes, use o campo **Exibir**: o slicer alimenta uma medida que diz, por
-posição, se ela aparece (1) ou não (0).
+A regular slicer filters the data and the rack structure shrinks. To filter and **keep the racks drawn**,
+hiding only the pallets, use the **Show** field: the slicer feeds a measure that says, per position,
+whether it appears (1) or not (0).
 
-**Passo a passo (exemplo com Material)**
+**Step by step (example with Material)**
 
-1. Crie uma **tabela só para o slicer**, sem relacionamento com a base (Modelagem → Nova tabela):
+1. Create a **table just for the slicer**, with no relationship to the data (Modeling → New table):
 
    ```dax
-   SlicerMaterial = DISTINCT ( Posicoes[Material] )
+   SlicerMaterial = DISTINCT ( Positions[Material] )
    ```
 
-2. Crie o slicer com o campo `SlicerMaterial[Material]`.
-3. Crie a medida:
+2. Create the slicer with the field `SlicerMaterial[Material]`.
+3. Create the measure:
 
    ```dax
-   Visivel =
+   Visible =
    VAR ok =
        NOT ISFILTERED ( SlicerMaterial[Material] )
-           || SELECTEDVALUE ( Posicoes[Material] ) IN VALUES ( SlicerMaterial[Material] )
+           || SELECTEDVALUE ( Positions[Material] ) IN VALUES ( SlicerMaterial[Material] )
    RETURN
        IF ( ok, 1, 0 )
    ```
 
-4. Arraste `Visivel` para o campo **Exibir** do visual.
+4. Drag `Visible` into the **Show** field of the visual.
 
-Sem seleção, tudo aparece. Com seleção, só os paletes escolhidos ficam visíveis.
+With no selection, everything appears. With a selection, only the chosen pallets stay visible.
 
-**Vários filtros:** crie uma tabela e um slicer para cada filtro e combine na mesma medida com `&&`. O
-palete só aparece se passar em todos.
+**Several filters:** create a table and a slicer for each filter and combine them in the same measure
+with `&&`. A pallet only appears if it passes all of them.
 
-**Posição com vários itens no mesmo texto** (por exemplo "ITEM1, ITEM2") e filtro por depósito:
+**Position with several items in the same text** (for example "ITEM1, ITEM2") and a filter by storage
+location:
 
 ```dax
-Visivel =
+Visible =
 VAR sep = ", "
-VAR itensPos = sep & SELECTEDVALUE ( Posicoes[Itens na Posição] ) & sep
+VAR positionItems = sep & SELECTEDVALUE ( Positions[Items in Position] ) & sep
 VAR okItem =
     NOT ISFILTERED ( SlicerItem[Item] )
         || COUNTROWS (
             FILTER (
                 VALUES ( SlicerItem[Item] ),
-                CONTAINSSTRING ( itensPos, sep & SlicerItem[Item] & sep )
+                CONTAINSSTRING ( positionItems, sep & SlicerItem[Item] & sep )
             )
         ) > 0
-VAR okDeposito =
-    NOT ISFILTERED ( SlicerDeposito[Depósito] )
-        || SELECTEDVALUE ( Posicoes[Depósito] ) IN VALUES ( SlicerDeposito[Depósito] )
+VAR okLocation =
+    NOT ISFILTERED ( SlicerLocation[Location] )
+        || SELECTEDVALUE ( Positions[Location] ) IN VALUES ( SlicerLocation[Location] )
 RETURN
-    IF ( okItem && okDeposito, 1, 0 )
+    IF ( okItem && okLocation, 1, 0 )
 ```
 
-O separador (`sep`) deve ser igual ao usado na concatenação. Ele evita que `ITEM1` case com `ITEM10`. Com
-vários itens selecionados, a posição aparece se tiver **qualquer** um.
+The separator (`sep`) must match the one used when concatenating. It prevents `ITEM1` from matching
+`ITEM10`. With several items selected, the position appears if it has **any** of them.
 
-**O que o campo Exibir entende**
+**What the Show field understands**
 
-| Valor | Resultado |
+| Value | Result |
 |---|---|
-| `1`, Verdadeiro, `Sim`, qualquer número diferente de zero | Visível |
-| `0`, Falso, `Não`, texto vazio, vazio | Oculto |
-| Campo Exibir sem nada | Tudo visível |
+| `1`, True, `Yes`, any non-zero number | Visible |
+| `0`, False, `No`, empty text, blank | Hidden |
+| Show field left empty | Everything visible |
 
-> A medida deve devolver `0` de forma explícita (`IF ( ok, 1, 0 )`). Se devolver vazio, o Power BI pode
-> descartar a linha.
+> The measure must return `0` explicitly (`IF ( ok, 1, 0 )`). If it returns blank, Power BI may drop the
+> row.
 
 ---
 
-## 7. Navegar no 3D
+## 7. Navigating in 3D
 
-| Ação | Como |
+| Action | How |
 |---|---|
-| Girar | Arrastar com o botão esquerdo |
-| Aproximar / afastar | Roda do mouse |
-| Mover a visão | Botão do meio, ou **Shift** + arrastar |
-| Reenquadrar | Botão **Reenquadrar** (canto superior direito) |
-| Ver detalhes | Passar o mouse sobre um palete |
-| Selecionar | Clicar num palete; **Ctrl** + clique seleciona vários; clique no vazio limpa |
-| Menu do Power BI | Botão direito |
+| Rotate | Drag with the left button |
+| Zoom in / out | Mouse wheel, or the **+** and **−** buttons |
+| Pan | Middle button, or **Shift** + drag |
+| Reframe | **Reframe** button (top right corner) |
+| See details | Hover a pallet |
+| Select | Click a pallet; **Ctrl** + click selects several; clicking empty space clears |
+| Power BI menu | Right button |
 
-Selecionar um palete filtra os outros visuais da página e esmaece o resto. A câmera **não mexe sozinha**
-quando você filtra; para reenquadrar ao mudar as dimensões, ligue **Câmera → Reenquadrar ao mudar as
-dimensões**.
+**Toolbar (top right corner):**
+
+| Control | What it does |
+|---|---|
+| **Search…** | Type an address, SKU or any text and press **Enter**. It looks in every text field of the row (aisle, rack, level, color field, tooltip fields), ignoring case and accents; all the words must match. Matches stay bright, the rest fades, and the camera flies to them. Shows "N found" or "no match"; clear the box to remove the highlight. Coordinates, height, occupancy, capacity and **Show** are not searched |
+| **All levels / Level X** | Shows only one level (pallets, empty slots and beams of the others disappear; the uprights stay). Only appears when there is more than one level |
+| **Labels ▾** | Opens a menu with **Aisle**, **Zone** and **Warehouse** to turn each kind of label on or off |
+| **+**, **−**, **Reframe**, **Drive** | Zoom, fit the whole scene, forklift mode |
+
+The **Labels** menu, the search and the level choice last while the report is open and are not saved. A
+label only shows when it is on in the menu **and** in the format pane (Aisle labels, Show zone titles,
+Show warehouse labels).
+
+**Empty positions.** Positions with no pallet (hidden by **Show** or by *Hide values*) appear as a faint
+gray ghost box, so you can see where there is room. Turn it off under **Scene → Show empty positions
+(ghost)**. Ghosts cannot be clicked and have no tooltip.
+
+Selecting a pallet filters the other visuals on the page and fades the rest. The camera **does not move
+by itself** when you filter; to reframe when the dimensions change, turn on **Camera → Reframe when
+dimensions change**.
+
+### Driving a forklift (game mode)
+
+Click **Drive** (top right corner) to enter the warehouse on a forklift, with the camera in the cab. The
+forklift starts in an aisle near the center and **cannot go through racks**. It can pass under racks
+whose lowest beam is above its height (for example, racks without the bottom levels).
+
+| Action | Key |
+|---|---|
+| Accelerate / reverse | **W** / **S** (or arrow keys) |
+| Steer | **A** / **D** (only turns while moving) |
+| Raise / lower the forks | **R** / **F** |
+| Faster | **Shift** |
+| Brake | **Space** |
+| Look around | Drag the mouse; **C** recenters |
+| Switch cockpit / 3rd person | **V** |
+| Exit | **Esc** or the **Exit** button |
+
+Aim the crosshair (screen center) at a pallet, up to 14 m away, to see the tooltip; click to select it.
+Click the visual first so it receives the keyboard.
 
 ---
 
-## 8. Painel de formatação, resumo
+## 8. Format pane summary
 
-| Cartão | O que tem |
+| Card | What it has |
 |---|---|
-| **Cores** | Modo, cores por valor/gradiente/faixas, Sem valor, Palete padrão, Ocultar valores |
-| **Legenda** | Mostrar, posição, fonte, contagem, % |
-| **Layout** | Pares, pareamento, rótulos de rua (e tipo na planta), ordem do nível, inverter |
-| **Geometria** | Altura do nível, largura do corredor (grade) ou tamanho da célula (planta) |
-| **Galpões** | Paredes, cor, altura, margem e piso por galpão (planta com campo Galpão) |
-| **Zonas (máximo 20)** | Zonas com título, cantos, cor e altura (planta) |
-| **Cena** | Fundo, piso (grade ou sólido) e sua cor, névoa, cor dos montantes e das longarinas |
-| **Câmera** | Reenquadrar ao mudar as dimensões |
-| **Tooltip** | Mostrar e incluir o campo "Colorir por" |
-| **Desempenho** | Resolução, reduzir ao mover, mostrar longarinas, diagnóstico (fps) |
+| **Colors** | Mode, colors per value/gradient/ranges, No value, Default pallet, Hide values |
+| **Legend** | Show, position, font, count, % |
+| **Layout** | Pairs, pairing, aisle labels (and type on the floor plan), level order, invert |
+| **Geometry** | Level height, corridor width (grid) or cell size (floor plan) |
+| **Warehouses** | Walls, color, height, margin, floor and labels per warehouse (floor plan with Warehouse field) |
+| **Zones (max 20)** | Zones with title, corners, color and height (floor plan) |
+| **Scene** | Background, floor (grid or solid) and its color, fog, upright and beam colors, beam opacity, empty positions (ghost) |
+| **Camera** | Reframe when dimensions change |
+| **Tooltip** | Show and include the "Color by" field |
+| **Performance** | Resolution, reduce while moving, show beams, diagnostics (fps) |
 
-Em máquina fraca, comece por **Resolução máxima → Leve** e **Mostrar longarinas** desligado.
+On a weak machine, start with **Maximum resolution → Light** and **Show beams** turned off.
 
 ---
 
-## 9. Limites e problemas comuns
+## 9. Limits and common problems
 
-- Chegam até **30.000 linhas**; acima disso a legenda avisa "dados truncados".
-- Posições **duplicadas** usam a primeira linha e geram aviso.
-- O visual foi testado com mais de 12.000 posições, roda offline e não carrega nada da internet.
+- Up to **30,000 rows** are loaded; above that the legend warns "data truncated".
+- **Duplicate** positions use the first row and raise a warning.
+- The visual was tested with more than 12,000 positions, runs offline and loads nothing from the
+  internet.
 
-**A estrutura encolhe quando uso um slicer.** O slicer está filtrando a base. Use a tabela desconectada
-com o campo **Exibir** (seção 6).
+**The structure shrinks when I use a slicer.** The slicer is filtering the data. Use the disconnected
+table with the **Show** field (section 6).
 
-**Nada some quando escolho no slicer.** Confira se a medida está no campo **Exibir** e se o slicer usa a
-tabela desconectada.
+**Nothing disappears when I pick in the slicer.** Check that the measure is in the **Show** field and
+that the slicer uses the disconnected table.
 
-**A câmera ficou longe ou perto demais.** Clique em **Reenquadrar**.
+**The legend says "N without Aisle, Rack or Level (ignored)".** Those rows arrived empty in one of the three
+fields, so they are not drawn. A common cause: the column was typed as **number** in Power Query, so text
+values such as `A` or `BLOCO-A` became empty. Set Aisle, Rack and Level to **Text**.
 
-**O gradiente não aparece.** O campo em **Colorir por** precisa chegar como número.
+**The camera is too far or too close.** Click **Reframe**.
 
-**A planta ficou espelhada ou girada.** Multiplique X (ou Y) por -1 nos dados. Confira também se o X e o Y
-de um galpão não estão trocados.
+**The warehouse label has no percentage.** Check that **Occupancy** (with at least one value) and
+**Capacity** are in the visual, and that the capacity is not zero.
 
-**Os racks viraram um bloco sem corredor.** Na planta os corredores são vãos nas coordenadas: deixe
-linhas vazias entre os pares de ruas.
+**There is an Export button?** Not for now. A view export (PDF) was built but is turned off, because the
+Power BI administrator can block downloads from visuals ("Download unavailable"). See the project spec,
+section 16.
 
-**Não aparecem paredes nem zonas.** Elas só existem na planta (Coord X e Coord Y). As paredes precisam
-também do campo **Galpão**.
+**The gradient does not appear.** The field in **Color by** must arrive as a number.
 
-**Uma rua está formando par com a vizinha errada (grade automática).** Use **Pareamento → Pelo número da
-rua**, e **Pares começam em rua par** se o par físico for 2-3, 4-5.
+**The floor plan is mirrored or rotated.** Multiply X (or Y) by -1 in the data. Also check that the X
+and Y of a warehouse are not swapped.
 
-**Está pesado ao girar.** Veja **Desempenho**: resolução Leve e sem longarinas.
+**The racks became one block with no corridor.** On the floor plan, corridors are gaps in the
+coordinates: leave empty rows between pairs of aisles.
 
-**Um valor novo apareceu em cinza.** Passou de 30 valores no modo categórico. Filtre, agrupe ou use
-faixas.
+**Walls or zones do not appear.** They only exist on the floor plan (X coord and Y coord). Walls also
+need the **Warehouse** field.
+
+**An aisle is pairing with the wrong neighbor (automatic grid).** Use **Aisle pairing → By aisle
+number**, and **Pairs start at an even aisle** if the physical pair is 2-3, 4-5.
+
+**It is slow when rotating.** See **Performance**: Light resolution and no beams.
+
+**A new value showed up in gray.** It went over 30 values in categorical mode. Filter, group or use
+ranges.
